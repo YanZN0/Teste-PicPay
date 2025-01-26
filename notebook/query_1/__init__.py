@@ -1,0 +1,5 @@
+from pokemon_alturas import pipeline_pokemon_mais_alto_primeira_forma
+import asyncio
+
+
+print(asyncio.run(pipeline_pokemon_mais_alto_primeira_forma()))

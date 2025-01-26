@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "teste - picpay"
+version = "0.1.0"
+description = ""
+authors = ["Yan Robim <yanrobim@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.11.5"
+requests = "^2.32.3"
+pandas = "^2.2.3"
+certifi = "^2024.12.14"
+aiohttp = "^3.11.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
