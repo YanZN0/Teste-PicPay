@@ -3,7 +3,6 @@ import asyncio
 import pandas as pd
 
 async def obter_pokemons() -> list:
-    """Obtém a lista de Pokémons a partir da API."""
     url = "https://pokeapi.co/api/v2/pokemon/"
     pokemons = []
 
@@ -17,12 +16,10 @@ async def obter_pokemons() -> list:
     return pokemons
 
 async def obter_dados_pokemon(pokemon_url: str, session) -> dict:
-    """Obtém os dados detalhados de um Pokémon."""
     async with session.get(pokemon_url) as response:
         return await response.json()
 
 async def obter_cadeia_evolutiva(species_url: str, session) -> dict:
-    """Obtém a cadeia evolutiva a partir da URL da espécie."""
     async with session.get(species_url) as response:
         species_data = await response.json()
         evolution_chain_url = species_data.get('evolution_chain', {}).get('url', '')
@@ -33,7 +30,6 @@ async def obter_cadeia_evolutiva(species_url: str, session) -> dict:
     return {}
 
 async def processar_evolucoes(pokemons: list) -> pd.DataFrame:
-    """Processa a lista de Pokémons para obter suas evoluções."""
     pokemons_com_evolucoes = []
 
     async with aiohttp.ClientSession() as session:
@@ -69,16 +65,13 @@ async def processar_evolucoes(pokemons: list) -> pd.DataFrame:
     return pd.DataFrame(pokemons_com_evolucoes)
 
 async def exibir_pokemons_com_evolution() -> pd.DataFrame:
-    """Função principal para obter os Pokémons com suas evoluções."""
     pokemons = await obter_pokemons()
     return await processar_evolucoes(pokemons)
 
 def contar_pokemons_com_multiplos_caminhos(df: pd.DataFrame) -> int:
-    """Conta quantos Pokémons possuem mais de um caminho evolutivo."""
     return df[df['num_caminhos'] > 1].shape[0]
 
 def pipeline_pokemon_com_multiplos_caminhos():
-    """Executa o pipeline completo para contar Pokémons com múltiplos caminhos evolutivos."""
     loop = asyncio.get_event_loop()
     df_pokemons = loop.run_until_complete(exibir_pokemons_com_evolution())
 

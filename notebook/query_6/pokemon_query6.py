@@ -35,12 +35,12 @@ async def obter_pokemons():
                 pokemons.extend(data["results"])
                 url = data['next']
 
-        # Obter detalhes de cada Pokémon e filtrar por forma padrão
+    
         pokemons_detalhados = []
         for pokemon in pokemons:
             async with session.get(pokemon['url']) as response:
                 pokemon_data = await response.json()
-                if pokemon_data['is_default']:  # Considera apenas a forma padrão
+                if pokemon_data['is_default']:  
                     nome = pokemon_data['name']
                     tipos = [tipo['type']['name'] for tipo in pokemon_data['types']]
                     pokemons_detalhados.append({'name': nome, 'types': tipos})
@@ -48,7 +48,7 @@ async def obter_pokemons():
         return pd.DataFrame(pokemons_detalhados)
 
 def calcular_vantagens(df_pokemons):
-    # Armazena a quantidade de Pokémons sobre os quais cada Pokémon tem vantagem
+
     vantagens_por_pokemon = []
 
     for i, atacante in df_pokemons.iterrows():
@@ -56,9 +56,9 @@ def calcular_vantagens(df_pokemons):
 
         for j, defensor in df_pokemons.iterrows():
             if i == j:
-                continue  # Não comparar um Pokémon consigo mesmo
+                continue  
             
-            # Verificar vantagem atacante
+
             if any(
                 tipo_atacante in vantagens_atacantes and tipo_defensor in vantagens_atacantes[tipo_atacante]
                 for tipo_atacante in atacante['types']

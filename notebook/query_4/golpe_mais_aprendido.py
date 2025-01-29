@@ -7,7 +7,6 @@ import pandas as pd
 
 
 async def fetch_pokemon_urls(session):
-    """Obtém as URLs de todos os Pokémon na PokeAPI."""
     url = "https://pokeapi.co/api/v2/pokemon?limit=1000"
     async with session.get(url) as response:
         data = await response.json()
@@ -15,13 +14,12 @@ async def fetch_pokemon_urls(session):
 
 
 async def fetch_pokemon_info(url, session):
-    """Obtém as informações detalhadas de um Pokémon pela URL."""
+
     async with session.get(url) as response:
         return await response.json()
 
 
 async def golpe_mais_aprendido_na_forma_padrao():
-    """Identifica o golpe mais aprendido entre os Pokémon na forma padrão."""
     async with aiohttp.ClientSession() as session:
         # Obter URLs de todos os Pokémon
         pokemon_urls = await fetch_pokemon_urls(session)
@@ -85,7 +83,6 @@ async def golpe_mais_aprendido_na_forma_padrao():
         }
 
 async def pokemon_com_mais_attack_no_golpe_mais_aprendido(golpe_mais_aprendido):
-    """Identifica o Pokémon com o maior valor de 'attack' e os 10 melhores entre os que aprendem o golpe mais aprendido."""
     async with aiohttp.ClientSession() as session:
         # Obter URLs de todos os Pokémon
         pokemon_urls = await fetch_pokemon_urls(session)
@@ -109,10 +106,10 @@ async def pokemon_com_mais_attack_no_golpe_mais_aprendido(golpe_mais_aprendido):
                             "versao": version_detail['version_group']['name']
                         })
 
-        # Criar DataFrame com os Pokémon que aprendem o golpe
+
         df_pokemon = pd.DataFrame(pokemons_que_aprendem_o_golpe)
 
-        # Encontrar o Pokémon com maior 'attack'
+
         if not df_pokemon.empty:
             pokemon_top_attack = df_pokemon.loc[df_pokemon['attack'].idxmax()]
             mensagem_top_attack = (
@@ -120,10 +117,10 @@ async def pokemon_com_mais_attack_no_golpe_mais_aprendido(golpe_mais_aprendido):
                 f"com {pokemon_top_attack['attack']} de ataque. Isso ocorre na versão '{pokemon_top_attack['versao']}'."
             )
 
-            # Top 10 Pokémon com maior ataque
+
             df_top_10 = df_pokemon.sort_values(by="attack", ascending=False).head(10)
 
-            # Mensagem adicional para exibição do Top 10
+
             mensagem_top_10 = "\nTop 10 Pokémon que aprendem o golpe mais aprendido:\n" + df_top_10.to_string(index=False)
         else:
             mensagem_top_attack = f"Nenhum Pokémon encontrado que aprende o golpe '{golpe_mais_aprendido}'."
@@ -139,18 +136,15 @@ async def pokemon_com_mais_attack_no_golpe_mais_aprendido(golpe_mais_aprendido):
         }
 
 async def pipeline():
-    """Pipeline principal para análise dos Pokémon."""
     print("Iniciando pipeline de análise Pokémon...\n")
 
-    # Etapa 1: Identifica o golpe mais aprendido na forma padrão
+
     resultado_golpe = await golpe_mais_aprendido_na_forma_padrao()
 
-    # Etapa 2: Identifica o Pokémon com maior ataque e o Top 10
     resultado_top_10 = await pokemon_com_mais_attack_no_golpe_mais_aprendido(resultado_golpe["golpe_mais_aprendido"])
 
     print("\nPipeline concluída com sucesso!")
 
-    # Exibe os resultados detalhados no console
     print("\nDetalhes do Pokémon com maior ataque:")
     print(resultado_top_10["mensagem_attack"])
 
@@ -160,7 +154,7 @@ async def pipeline():
     else:
         print("\nNenhum dado disponível para o Top 10 Pokémon.")
 
-    # Retorna todos os resultados
+
     return {
         "golpe_mais_aprendido": resultado_golpe["golpe_mais_aprendido"],
         "mensagem_golpe": resultado_golpe["mensagem"],

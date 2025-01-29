@@ -4,7 +4,7 @@ import pandas as pd
 
 
 async def fetch(session, url):
-    """Função auxiliar para fazer requisições assíncronas."""
+
     async with session.get(url) as response:
         return await response.json()
 
